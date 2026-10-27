@@ -1,0 +1,1603 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel | ParkSmart</title>
+
+    <style>
+        /* =========================
+           1. Variables y estilos base
+        ========================= */
+
+        :root {
+            --navy: #10243a;
+            --blue: #2563eb;
+            --bg: #f3f6fb;
+            --ink: #182538;
+            --muted: #64748b;
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        /* =========================
+           2. Barra lateral y logo
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 235px;
+            background: var(--navy);
+            color: white;
+            padding: 25px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .logo {
+            display: block;
+            width: 150px;
+            height: 100px;
+            object-fit: contain;
+            background: white;
+            border-radius: 14px;
+            padding: 5px;
+        }
+
+        .nav {
+            display: grid;
+            gap: 7px;
+        }
+
+        .nav button {
+            background: transparent;
+            border: 0;
+            color: #bdcce0;
+            text-align: left;
+            padding: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .nav button.active,
+        .nav button:hover {
+            background: #1f3a59;
+            color: white;
+        }
+
+        .side-note {
+            margin-top: auto;
+            background: #193653;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #d6e4f4;
+        }
+
+        /* =========================
+           3. Contenido y encabezado
+        ========================= */
+
+        main {
+            margin-left: 235px;
+            padding: 28px;
+            max-width: 1600px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: var(--blue);
+            font-weight: 800;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+            margin: 6px 0;
+            color: var(--navy);
+        }
+
+        .profile {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: white;
+            border: 1px solid #e5eaf2;
+            padding: 8px 13px;
+            border-radius: 12px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+        }
+
+        .profile small {
+            display: block;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* =========================
+           4. Banner principal
+        ========================= */
+
+        .hero {
+            background: linear-gradient(110deg, #10243a, #1d4770);
+            border-radius: 18px;
+            color: white;
+            padding: 25px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hero h2 {
+            font-size: 23px;
+            margin: 8px 0;
+        }
+
+        .hero p {
+            color: #c6d8eb;
+            max-width: 620px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .live {
+            font-size: 12px;
+            color: #bbf7d0;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            margin-right: 7px;
+        }
+
+        .hero-stat {
+            text-align: right;
+            min-width: 135px;
+        }
+
+        .hero-stat strong {
+            font-size: 37px;
+            display: block;
+        }
+
+        .hero-stat span {
+            font-size: 12px;
+            color: #c6d8eb;
+        }
+
+        /* =========================
+           5. Estadísticas y paneles
+        ========================= */
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .metric,
+        .panel {
+            background: white;
+            border: 1px solid #e6ebf2;
+            border-radius: 15px;
+            padding: 19px;
+        }
+
+        .metric .label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .metric .value {
+            font-size: 29px;
+            font-weight: 800;
+            margin: 9px 0 4px;
+            color: var(--navy);
+        }
+
+        .metric .foot {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(290px, 0.9fr);
+            gap: 16px;
+        }
+
+        .panel {
+            margin-bottom: 16px;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 17px;
+        }
+
+        .panel h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--navy);
+        }
+
+        .panel-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        /* =========================
+           6. Espacios de estacionamiento
+        ========================= */
+
+        .select,
+        input,
+        textarea {
+            border: 1px solid #dbe3ee;
+            border-radius: 9px;
+            padding: 9px;
+            background: white;
+            color: var(--ink);
+            font: inherit;
+        }
+
+        .floor-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 9px;
+        }
+
+        .spot {
+            border: 1px solid #dbe5ef;
+            border-radius: 10px;
+            padding: 11px 3px;
+            text-align: center;
+            cursor: pointer;
+            background: #f0fdf4;
+            color: var(--ink);
+        }
+
+        .spot.busy {
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .spot.reserved {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .spot:hover {
+            transform: translateY(-2px);
+        }
+
+        .spot .car {
+            font-size: 20px;
+        }
+
+        .spot strong {
+            font-size: 11px;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .spot small {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 15px;
+        }
+
+        .legend i {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        .progress-row {
+            margin: 17px 0;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .track {
+            height: 8px;
+            border-radius: 20px;
+            background: #edf2f7;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #38bdf8, #2563eb);
+        }
+
+        /* =========================
+           7. Eventos y estados
+        ========================= */
+
+        .activity {
+            display: grid;
+            gap: 16px;
+        }
+
+        .event {
+            display: flex;
+            gap: 11px;
+            align-items: flex-start;
+        }
+
+        .event-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #eff6ff;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .event strong {
+            font-size: 12px;
+            display: block;
+            margin: 2px 0 4px;
+        }
+
+        .event small {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .pill {
+            font-size: 10px;
+            padding: 5px 8px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #166534;
+            white-space: nowrap;
+        }
+
+        .footnote {
+            color: #8190a5;
+            font-size: 11px;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           8. Vistas y tablas
+        ========================= */
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .notice {
+            padding: 13px 15px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #1e40af;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 17px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        .table th {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================
+           9. Botones y componentes
+        ========================= */
+
+        .btn {
+            border: 0;
+            border-radius: 9px;
+            background: var(--blue);
+            color: white;
+            padding: 10px 13px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn.secondary {
+            background: #eaf1ff;
+            color: #1d4ed8;
+        }
+
+        .btn.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .formgrid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+        }
+
+        .component {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        .component:last-child {
+            border-bottom: 0;
+        }
+
+        .component small {
+            display: block;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .switch input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .status-controls {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .status-controls button {
+            font-size: 11px;
+            padding: 7px 9px;
+            border-radius: 8px;
+            border: 1px solid #dbe3ee;
+            background: white;
+            cursor: pointer;
+        }
+
+        .status-controls button.chosen {
+            background: #dbeafe;
+            border-color: #60a5fa;
+            color: #1d4ed8;
+        }
+
+        /* =========================
+           10. Diseño adaptable
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .sidebar {
+                width: 195px;
+            }
+
+            main {
+                margin-left: 195px;
+                padding: 20px;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                width: 135px;
+                height: 90px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                position: static;
+                width: auto;
+                padding: 14px;
+                gap: 12px;
+            }
+
+            .brand {
+                padding: 0;
+            }
+
+            .logo {
+                width: 125px;
+                height: 85px;
+            }
+
+            .nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .side-note {
+                display: none;
+            }
+
+            main {
+                margin: 0;
+                padding: 15px;
+            }
+
+            .profile {
+                display: none;
+            }
+
+            .hero {
+                padding: 18px;
+            }
+
+            .hero-stat strong {
+                font-size: 27px;
+            }
+
+            .metrics {
+                gap: 8px;
+            }
+
+            .metric {
+                padding: 13px;
+            }
+
+            .metric .value {
+                font-size: 24px;
+            }
+
+            .floor-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .formgrid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         11. Barra lateral
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <!-- Logo centrado -->
+        <div class="brand">
+            <img
+                class="logo"
+                src="Park.png"
+                alt="Logo de ParkSmart"
+            >
+        </div>
+
+        <!-- Navegación del panel -->
+        <nav class="nav">
+            <button class="active" data-view="dashboard">
+                ▦ &nbsp; Resumen general
+            </button>
+
+            <button data-view="floors">
+                ▤ &nbsp; Espacios por piso
+            </button>
+
+            <button data-view="events">
+                ◷ &nbsp; Registro de eventos
+            </button>
+
+            <button data-view="system" id="systemNav">
+                ⚙ &nbsp; Componentes y sensores
+            </button>
+        </nav>
+
+        <div class="side-note">
+            <strong>Sistema de parqueo</strong>
+            <br>
+            Gestión de ocupación y estado de componentes.
+        </div>
+
+    </aside>
+
+    <!-- =========================
+         12. Contenido principal
+    ========================= -->
+
+    <main>
+
+        <header class="topbar">
+            <div>
+                <div class="eyebrow" id="eyebrow">
+                    PARKSMART · ADMINISTRACIÓN
+                </div>
+
+                <h1 id="pageTitle">Resumen general</h1>
+            </div>
+
+            <div class="profile">
+                <div class="avatar" id="profileAvatar">A</div>
+
+                <div>
+                    <strong id="profileName">Administrador</strong>
+
+                    <small>
+                        <span id="profileRole">Control total</span>
+                        ·
+                        <a
+                            href="#"
+                            id="logout"
+                            style="color:#2563eb"
+                        >
+                            Cerrar sesión
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner principal -->
+        <section class="hero">
+            <div>
+                <div class="live">
+                    <i class="dot"></i>
+                    Sistema de monitoreo
+                </div>
+
+                <h2>Todo el parqueo, de un vistazo.</h2>
+
+                <p>
+                    Consulta los espacios libres y ocupados, revisa el
+                    estado de cada piso y administra los componentes
+                    del sistema.
+                </p>
+            </div>
+
+            <div class="hero-stat">
+                <strong id="heroFree">—</strong>
+                <span>espacios disponibles</span>
+            </div>
+        </section>
+
+        <!-- =========================
+             13. Resumen general
+        ========================= -->
+
+        <section class="view active" id="dashboard">
+
+            <div class="metrics">
+                <div class="metric">
+                    <div class="label">Capacidad total</div>
+                    <div class="value" id="total">—</div>
+                    <div class="foot">Espacios configurados</div>
+                </div>
+
+                <div class="metric">
+                    <div class="label">Espacios libres</div>
+                    <div class="value" id="free">—</div>
+                    <div class="foot">Disponibles para ocupación</div>
+                </div>
+
+                <div class="metric">
+                    <div class="label">Espacios ocupados</div>
+                    <div class="value" id="busy">—</div>
+                    <div class="foot">Vehículos detectados</div>
+                </div>
+
+                <div class="metric">
+                    <div class="label">Pisos monitoreados</div>
+                    <div class="value" id="levels">—</div>
+                    <div class="foot">Niveles del parqueo</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Disponibilidad por piso</h3>
+                            <div class="panel-sub">
+                                Selecciona un piso para ver el detalle
+                            </div>
+                        </div>
+
+                        <select class="select" id="floorSelect">
+                            <option value="all">Todos los pisos</option>
+                            <option value="1">Piso 1</option>
+                            <option value="2">Piso 2</option>
+                            <option value="3">Piso 3</option>
+                        </select>
+                    </div>
+
+                    <div class="floor-grid" id="spotGrid"></div>
+
+                    <div class="legend">
+                        <span>
+                            <i style="background:#22c55e"></i>
+                            Libre
+                        </span>
+
+                        <span>
+                            <i style="background:#f43f5e"></i>
+                            Ocupado
+                        </span>
+                    </div>
+
+                    <div class="footnote">
+                        La vista general refleja el estado actual de los
+                        espacios. Las modificaciones están restringidas
+                        al personal administrativo.
+                    </div>
+                </div>
+
+                <div>
+                    <div class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h3>Ocupación por piso</h3>
+                                <div class="panel-sub">
+                                    Porcentaje de espacios ocupados
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="floorBars"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-head">
+                            <h3>Actividad reciente</h3>
+                            <span class="pill">En tiempo de uso</span>
+                        </div>
+
+                        <div class="activity" id="recent"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =========================
+             14. Espacios por piso
+        ========================= -->
+
+        <section class="view" id="floors">
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>Espacios registrados</h3>
+                        <div class="panel-sub">
+                            Consulta y modifica el estado de los espacios
+                        </div>
+                    </div>
+
+                    <select class="select" id="tableFloor">
+                        <option value="all">Todos los pisos</option>
+                        <option value="1">Piso 1</option>
+                        <option value="2">Piso 2</option>
+                        <option value="3">Piso 3</option>
+                    </select>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ESPACIO</th>
+                            <th>PISO</th>
+                            <th>ESTADO</th>
+                            <th>ACCIÓN</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="spaceRows"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- =========================
+             15. Registro de eventos
+        ========================= -->
+
+        <section class="view" id="events">
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>Registro de eventos</h3>
+                        <div class="panel-sub">
+                            Historial de cambios de ocupación y eventos
+                            del sistema
+                        </div>
+                    </div>
+
+                    <button class="btn secondary" id="exportEvents">
+                        Exportar CSV
+                    </button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>FECHA Y HORA</th>
+                            <th>EVENTO</th>
+                            <th>DETALLE</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eventRows"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- =========================
+             16. Componentes y sensores
+        ========================= -->
+
+        <section class="view" id="system">
+            <div class="notice">
+                Puedes cambiar manualmente el estado de los componentes
+                para probar cómo se vería su supervisión desde la plataforma.
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>Componentes y sensores</h3>
+                        <div class="panel-sub">
+                            Control manual de estado para pruebas
+                        </div>
+                    </div>
+
+                    <button class="btn secondary" id="allOnline">
+                        Marcar todos operativos
+                    </button>
+                </div>
+
+                <div id="systemRows"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        // ==========================================
+        // 17. Verificar sesión administrativa
+        // ==========================================
+
+        const sessionRole = localStorage.getItem("parksmart_role");
+
+        if (sessionRole !== "admin") {
+            localStorage.removeItem("parksmart_role");
+            window.location.replace("login-admin.html");
+        }
+
+        const isAdmin = true;
+
+        document.getElementById("profileAvatar").textContent = "A";
+        document.getElementById("profileName").textContent = "Administrador";
+        document.getElementById("profileRole").textContent = "Control total";
+        document.getElementById("eyebrow").textContent =
+            "PARKSMART · ADMINISTRACIÓN";
+
+        document.getElementById("logout").onclick = function (event) {
+            event.preventDefault();
+
+            localStorage.removeItem("parksmart_role");
+            window.location.href = "index.html";
+        };
+
+        // ==========================================
+        // 18. Datos iniciales
+        // ==========================================
+
+        const KEY = "parksmart_state_v2";
+
+        const initialSpots = [];
+
+        for (let floor = 1; floor <= 3; floor++) {
+            for (let number = 1; number <= 10; number++) {
+                const occupied =
+                    (floor === 1 && [2, 4, 8].includes(number)) ||
+                    (floor === 2 && [1, 3, 6, 9].includes(number)) ||
+                    (floor === 3 && [5, 7, 10].includes(number));
+
+                initialSpots.push({
+                    id: `P${floor}-${String(number).padStart(2, "0")}`,
+                    floor: floor,
+                    state: occupied ? "busy" : "free"
+                });
+            }
+        }
+
+        const componentDefaults = [
+            {
+                id: "sensors",
+                name: "Sensores ultrasónicos",
+                desc: "Detectan la presencia de vehículos en cada espacio",
+                status: "online"
+            },
+            {
+                id: "esp32",
+                name: "Controlador ESP32",
+                desc: "Procesa las lecturas y coordina la ocupación",
+                status: "online"
+            },
+            {
+                id: "display",
+                name: "Pantalla informativa",
+                desc: "Muestra disponibilidad general y mensajes",
+                status: "online"
+            },
+            {
+                id: "printer",
+                name: "Impresora térmica",
+                desc: "Emite el tiquete con piso y espacio asignado",
+                status: "online"
+            },
+            {
+                id: "barrier",
+                name: "Barrera de acceso",
+                desc: "Controla la entrada de vehículos",
+                status: "online"
+            },
+            {
+                id: "web",
+                name: "Plataforma web",
+                desc: "Visualiza disponibilidad y eventos",
+                status: "online"
+            }
+        ];
+
+        // ==========================================
+        // 19. Cargar estado guardado
+        // ==========================================
+
+        let state = null;
+        let saving = false;
+
+        function defaultState() {
+            return { spots: initialSpots, components: componentDefaults, events: [] };
+        }
+
+        async function loadSharedState() {
+            if (!window.parkSupabase) {
+                try { state = JSON.parse(localStorage.getItem(KEY)); } catch (_) { state = null; }
+                if (!state || !Array.isArray(state.spots)) state = defaultState();
+                if (!Array.isArray(state.components)) state.components = componentDefaults;
+                if (!Array.isArray(state.events)) state.events = [];
+                render();
+                return;
+            }
+            const { data, error } = await window.parkSupabase
+                .from("parksmart_state").select("state").eq("id", 1).maybeSingle();
+            if (error) {
+                console.error("Error cargando estado compartido:", error);
+                alert("No se pudo conectar con Supabase. Revisá supabase-config.js y la tabla parksmart_state.");
+                state = defaultState();
+            } else if (data && data.state) {
+                state = data.state;
+            } else {
+                state = defaultState();
+                await save();
+            }
+            if (!Array.isArray(state.spots) || state.spots.length === 0) state.spots = initialSpots;
+            if (!Array.isArray(state.components) || state.components.length === 0) state.components = componentDefaults;
+            if (!Array.isArray(state.events)) state.events = [];
+
+            // Normalizar reservas antiguas después de cargar el estado.
+            state.spots.forEach(spot => {
+                if (spot.state === "reserved") spot.state = "free";
+            });
+
+            await save();
+            render();
+        }
+
+        const save = async () => {
+            if (!state) return;
+            localStorage.setItem(KEY, JSON.stringify(state));
+            if (!window.parkSupabase || saving) return;
+            saving = true;
+            const { error } = await window.parkSupabase
+                .from("parksmart_state")
+                .upsert({ id: 1, state, updated_at: new Date().toISOString() });
+            saving = false;
+            if (error) {
+                console.error("No se pudo guardar en Supabase:", error);
+                alert("No se pudo guardar el cambio compartido. Revisá las políticas de Supabase.");
+            }
+        };
+
+        const label = status => {
+            return status === "busy" ? "Ocupado" : "Libre";
+        };
+
+        const statusText = status => {
+            if (status === "online") return "Operativo";
+            if (status === "warning") return "Con fallos";
+            return "Fuera de servicio";
+        };
+
+        // ==========================================
+        // 20. Registro de eventos
+        // ==========================================
+
+        function log(event, detail) {
+            state.events.unshift({
+                time: new Date().toLocaleString("es-SV"),
+                event,
+                detail
+            });
+
+            if (state.events.length > 250) {
+                state.events = state.events.slice(0, 250);
+            }
+
+            save();
+        }
+
+        // ==========================================
+        // 21. Calcular estadísticas
+        // ==========================================
+
+        function totals() {
+            return {
+                free: state.spots.filter(
+                    spot => spot.state === "free"
+                ).length,
+
+                busy: state.spots.filter(
+                    spot => spot.state === "busy"
+                ).length,
+
+                total: state.spots.length,
+
+                levels: new Set(
+                    state.spots.map(spot => spot.floor)
+                ).size
+            };
+        }
+
+        function metrics() {
+            const result = totals();
+
+            [
+                ["total", result.total],
+                ["free", result.free],
+                ["busy", result.busy],
+                ["levels", result.levels]
+            ].forEach(([id, number]) => {
+                document.getElementById(id).textContent = number;
+            });
+
+            document.getElementById("heroFree").textContent = result.free;
+        }
+
+        // ==========================================
+        // 22. Cambiar estado de un espacio
+        // ==========================================
+
+        function changeSpot(id, newState) {
+            const spot = state.spots.find(item => item.id === id);
+
+            if (!spot) return;
+
+            const oldState = spot.state;
+
+            if (oldState === newState) return;
+
+            spot.state = newState;
+
+            log(
+                newState === "busy"
+                    ? "Espacio ocupado"
+                    : "Espacio liberado",
+                `${id} · ${label(oldState)} → ${label(newState)}`
+            );
+
+            render();
+        }
+
+        // ==========================================
+        // 23. Dibujar espacios por piso
+        // ==========================================
+
+        function grid() {
+            const selectedFloor =
+                document.getElementById("floorSelect").value;
+
+            const visibleSpots = state.spots.filter(spot => {
+                return selectedFloor === "all" ||
+                    spot.floor === Number(selectedFloor);
+            });
+
+            document.getElementById("spotGrid").innerHTML =
+                visibleSpots.map(spot => `
+                    <button
+                        class="spot ${spot.state}"
+                        data-id="${spot.id}"
+                        type="button"
+                    >
+                        <div class="car">
+                            ${spot.state === "busy" ? "🚘" : "✓"}
+                        </div>
+
+                        <strong>${spot.id}</strong>
+                        <small>${label(spot.state)}</small>
+                    </button>
+                `).join("");
+
+            document.querySelectorAll("#spotGrid .spot").forEach(button => {
+                button.onclick = function () {
+                    if (!isAdmin) return;
+
+                    const spot = state.spots.find(
+                        item => item.id === button.dataset.id
+                    );
+
+                    const choice = prompt(
+                        `Espacio ${spot.id}.\n` +
+                        `Estado actual: ${label(spot.state)}.\n\n` +
+                        "Escribe:\n" +
+                        "1 = Libre\n" +
+                        "2 = Ocupado\n\n" +
+                        "Cancelar para no cambiar."
+                    );
+
+                    if (choice === "1") {
+                        changeSpot(spot.id, "free");
+                    }
+
+                    if (choice === "2") {
+                        changeSpot(spot.id, "busy");
+                    }
+                };
+            });
+        }
+
+        // ==========================================
+        // 24. Gráfico de ocupación por piso
+        // ==========================================
+
+        function bars() {
+            const floors = [
+                ...new Set(state.spots.map(spot => spot.floor))
+            ];
+
+            document.getElementById("floorBars").innerHTML =
+                floors.map(floor => {
+                    const spots = state.spots.filter(
+                        spot => spot.floor === floor
+                    );
+
+                    const occupied = spots.filter(
+                        spot => spot.state === "busy"
+                    ).length;
+
+                    const percentage = spots.length
+                        ? Math.round(occupied / spots.length * 100)
+                        : 0;
+
+                    return `
+                        <div class="progress-row">
+                            <div class="progress-title">
+                                <span>Piso ${floor}</span>
+                                <strong>${percentage}% ocupado</strong>
+                            </div>
+
+                            <div class="track">
+                                <div
+                                    class="bar"
+                                    style="width:${percentage}%"
+                                ></div>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+        }
+
+        // ==========================================
+        // 25. Tabla de espacios registrados
+        // ==========================================
+
+        function table() {
+            const selectedFloor =
+                document.getElementById("tableFloor").value;
+
+            const visibleSpots = state.spots.filter(spot => {
+                return selectedFloor === "all" ||
+                    spot.floor === Number(selectedFloor);
+            });
+
+            document.getElementById("spaceRows").innerHTML =
+                visibleSpots.map(spot => `
+                    <tr>
+                        <td><strong>${spot.id}</strong></td>
+                        <td>Piso ${spot.floor}</td>
+
+                        <td>
+                            <span
+                                class="pill"
+                                style="${
+                                    spot.state === "busy"
+                                        ? "background:#ffe4e6;color:#9f1239"
+                                        : ""
+                                }"
+                            >
+                                ${label(spot.state)}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="status-controls">
+                                <button
+                                    data-id="${spot.id}"
+                                    data-state="free"
+                                    type="button"
+                                >
+                                    Liberar
+                                </button>
+
+                                <button
+                                    data-id="${spot.id}"
+                                    data-state="busy"
+                                    type="button"
+                                >
+                                    Ocupar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join("");
+
+            document.querySelectorAll("#spaceRows button").forEach(button => {
+                button.onclick = () => {
+                    changeSpot(button.dataset.id, button.dataset.state);
+                };
+            });
+        }
+
+        // ==========================================
+        // 26. Historial y actividad reciente
+        // ==========================================
+
+        function eventTable() {
+            document.getElementById("eventRows").innerHTML =
+                state.events.length
+                    ? state.events.map(event => `
+                        <tr>
+                            <td>${event.time}</td>
+                            <td><strong>${event.event}</strong></td>
+                            <td>${event.detail}</td>
+                        </tr>
+                    `).join("")
+                    : `
+                        <tr>
+                            <td colspan="3">
+                                Todavía no hay eventos registrados.
+                                Las acciones aparecerán aquí.
+                            </td>
+                        </tr>
+                    `;
+
+            document.getElementById("recent").innerHTML =
+                state.events.slice(0, 4).map(event => {
+                    let icon = "⚙";
+
+                    if (event.event.includes("ocupado")) icon = "🚘";
+                    if (event.event.includes("liberado")) icon = "✓";
+
+                    return `
+                        <div class="event">
+                            <div class="event-icon">${icon}</div>
+
+                            <div>
+                                <strong>${event.event}</strong>
+                                <small>
+                                    ${event.detail}<br>
+                                    ${event.time}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                }).join("") ||
+                '<small style="color:#64748b">La actividad reciente aparecerá aquí.</small>';
+        }
+
+        // ==========================================
+        // 27. Componentes y sensores
+        // ==========================================
+
+        function components() {
+            document.getElementById("systemRows").innerHTML =
+                state.components.map(component => `
+                    <div class="component">
+                        <div>
+                            <strong>${component.name}</strong>
+                            <small>${component.desc}</small>
+                        </div>
+
+                        <div>
+                            <div class="status-controls">
+                                <button
+                                    class="${component.status === "online" ? "chosen" : ""}"
+                                    data-id="${component.id}"
+                                    data-status="online"
+                                    type="button"
+                                >
+                                    Operativo
+                                </button>
+
+                                <button
+                                    class="${component.status === "warning" ? "chosen" : ""}"
+                                    data-id="${component.id}"
+                                    data-status="warning"
+                                    type="button"
+                                >
+                                    Con fallos
+                                </button>
+
+                                <button
+                                    class="${component.status === "offline" ? "chosen" : ""}"
+                                    data-id="${component.id}"
+                                    data-status="offline"
+                                    type="button"
+                                >
+                                    Fuera de servicio
+                                </button>
+                            </div>
+
+                            <div style="text-align:right;margin-top:7px">
+                                <span
+                                    class="pill"
+                                    style="${
+                                        component.status === "online"
+                                            ? ""
+                                            : component.status === "warning"
+                                                ? "background:#fef3c7;color:#92400e"
+                                                : "background:#fee2e2;color:#991b1b"
+                                    }"
+                                >
+                                    ${statusText(component.status)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join("");
+
+            document.querySelectorAll("#systemRows button").forEach(button => {
+                button.onclick = () => {
+                    const component = state.components.find(
+                        item => item.id === button.dataset.id
+                    );
+
+                    if (!component) return;
+
+                    const oldStatus = component.status;
+                    component.status = button.dataset.status;
+
+                    log(
+                        "Estado de componente actualizado",
+                        `${component.name}: ${statusText(oldStatus)} → ${statusText(component.status)}`
+                    );
+
+                    save();
+                    components();
+                    eventTable();
+                };
+            });
+        }
+
+        // ==========================================
+        // 28. Actualizar todo el panel
+        // ==========================================
+
+        function render() {
+            metrics();
+            grid();
+            bars();
+            table();
+            eventTable();
+            components();
+            save();
+        }
+
+        // ==========================================
+        // 29. Navegación entre secciones
+        // ==========================================
+
+        document.querySelectorAll(".nav button").forEach(button => {
+            button.onclick = () => {
+                document.querySelectorAll(".nav button").forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                document.querySelectorAll(".view").forEach(view => {
+                    view.classList.remove("active");
+                });
+
+                document.getElementById(button.dataset.view)
+                    .classList.add("active");
+
+                document.getElementById("pageTitle").textContent =
+                    button.textContent.replace(/[▦▤◷⚙]/g, "").trim();
+            };
+        });
+
+        // ==========================================
+        // 30. Filtros y acciones administrativas
+        // ==========================================
+
+        document.getElementById("floorSelect").onchange = grid;
+        document.getElementById("tableFloor").onchange = table;
+
+        document.getElementById("allOnline").onclick = () => {
+            state.components.forEach(component => {
+                component.status = "online";
+            });
+
+            log(
+                "Revisión de componentes",
+                "Todos los componentes marcados como operativos manualmente"
+            );
+
+            render();
+        };
+
+        // ==========================================
+        // 31. Exportar eventos a CSV
+        // ==========================================
+
+        document.getElementById("exportEvents").onclick = () => {
+            const rows = [
+                ["Fecha y hora", "Evento", "Detalle"],
+                ...state.events.map(event => [
+                    event.time,
+                    event.event,
+                    event.detail
+                ])
+            ];
+
+            const csv = rows.map(row => {
+                return row.map(value => {
+                    return '"' + String(value).replace(/"/g, '""') + '"';
+                }).join(",");
+            }).join("\n");
+
+            const blob = new Blob(
+                ["\ufeff" + csv],
+                { type: "text/csv;charset=utf-8;" }
+            );
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "registro_parqueo.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+        };
+
+        // ==========================================
+        // 32. Inicializar el panel
+        // ==========================================
+
+        loadSharedState();
+    </script>
+
+</body>
+</html>

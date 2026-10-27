@@ -1,0 +1,795 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ParkSmart | Disponibilidad del parqueo</title>
+
+    <style>
+        /* =========================
+           1. Variables y estilos base
+        ========================= */
+
+        :root {
+            --navy: #10243a;
+            --blue: #2563eb;
+            --bg: #f3f6fb;
+            --ink: #182538;
+            --muted: #64748b;
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        /* =========================
+           2. Encabezado y marca
+        ========================= */
+
+        header {
+            padding: 22px max(22px, calc((100% - 1180px) / 2));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            border-bottom: 1px solid #e5eaf2;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            gap: 11px;
+            align-items: center;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 19px;
+            color: var(--navy);
+        }
+
+        .brand small {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================
+           3. Botones
+        ========================= */
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 9px;
+            padding: 11px 14px;
+            font-weight: 700;
+            font-size: 13px;
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn.secondary {
+            background: #eaf1ff;
+            color: #1d4ed8;
+        }
+
+        /* =========================
+           4. Contenedor principal
+        ========================= */
+
+        .wrap {
+            max-width: 1180px;
+            margin: auto;
+            padding: 28px 22px;
+        }
+
+        /* =========================
+           5. Sección principal
+        ========================= */
+
+        .hero {
+            background: linear-gradient(110deg, #10243a, #1d4770);
+            border-radius: 20px;
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: #93c5fd;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            font-size: clamp(26px, 4vw, 38px);
+            margin: 10px 0;
+        }
+
+        .hero p {
+            color: #c6d8eb;
+            max-width: 700px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .live {
+            font-size: 12px;
+            color: #bbf7d0;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            margin-right: 7px;
+        }
+
+        .bigstat {
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .bigstat strong {
+            display: block;
+            font-size: 50px;
+        }
+
+        .bigstat span {
+            font-size: 12px;
+            color: #c6d8eb;
+        }
+
+        /* =========================
+           6. Tarjetas de estadísticas
+        ========================= */
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .metric,
+        .panel {
+            background: white;
+            border: 1px solid #e6ebf2;
+            border-radius: 15px;
+            padding: 19px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .value {
+            font-size: 30px;
+            font-weight: 800;
+            margin: 9px 0 4px;
+            color: var(--navy);
+        }
+
+        .foot {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           7. Panel de espacios
+        ========================= */
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .panel h2 {
+            font-size: 17px;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 6px 0 18px;
+        }
+
+        /* =========================
+           8. Filtro por piso
+        ========================= */
+
+        .floorfilter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 0 0 16px;
+        }
+
+        .floorfilter label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .floorfilter select {
+            border: 1px solid #dbe5ef;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--ink);
+            padding: 10px 34px 10px 12px;
+            font: inherit;
+            font-size: 13px;
+            min-width: 180px;
+        }
+
+        .filterhint {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           9. Pisos y disponibilidad
+        ========================= */
+
+        .floor {
+            margin: 18px 0;
+        }
+
+        .floorhead {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .track {
+            height: 9px;
+            background: #edf2f7;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #2563eb);
+            border-radius: 20px;
+        }
+
+        .spotgrid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .spot {
+            border: 1px solid #dbe5ef;
+            border-radius: 10px;
+            padding: 11px 3px;
+            text-align: center;
+            background: #f0fdf4;
+        }
+
+        .spot.busy {
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .spot.reserved {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .spot strong {
+            font-size: 11px;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .spot small {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           10. Leyenda y nota informativa
+        ========================= */
+
+        .legend {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 15px;
+        }
+
+        .legend i {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #8190a5;
+            line-height: 1.5;
+            margin-top: 18px;
+        }
+
+        /* =========================
+           11. Pie de página
+        ========================= */
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+            padding: 24px;
+        }
+
+        /* =========================
+           12. Diseño adaptable
+        ========================= */
+
+        @media (max-width: 800px) {
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            header {
+                padding: 16px;
+            }
+
+            .wrap {
+                padding: 16px;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .metric {
+                padding: 13px;
+            }
+
+            .value {
+                font-size: 25px;
+            }
+
+            .spotgrid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         13. Encabezado de ParkSmart
+    ========================== -->
+
+    <header>
+        <div class="brand">
+            
+            <div class="logo">
+                <img src="Park.png" alt="ParkSmart">
+            </div>
+
+            <div>
+                <strong>ParkSmart</strong>
+                <small>GESTIÓN INTELIGENTE DE PARQUEO</small>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a class="btn" href="login-admin.html">
+                Acceso administrativo
+            </a>
+        </div>
+    </header>
+
+    <main class="wrap">
+
+        <!-- =========================
+             14. Resumen principal
+        ========================== -->
+
+        <section class="hero">
+            <div>
+                <div class="live">
+                    <i class="dot"></i>
+                    Información general del parqueo
+                </div>
+
+                <h1>Disponibilidad del parqueo</h1>
+
+                <p>
+                    Consulta los espacios libres y ocupados por piso.
+                    Esta página es pública y de solo lectura; para
+                    realizar cambios se requiere acceso autorizado.
+                </p>
+            </div>
+
+            <div class="bigstat">
+                <strong id="freeHero">—</strong>
+                <span>espacios disponibles</span>
+            </div>
+        </section>
+
+        <!-- =========================
+             15. Estadísticas generales
+        ========================== -->
+
+        <section class="metrics">
+
+            <div class="metric">
+                <div class="label">Capacidad total</div>
+                <div class="value" id="total">—</div>
+                <div class="foot">Espacios configurados</div>
+            </div>
+
+            <div class="metric">
+                <div class="label">Espacios libres</div>
+                <div class="value" id="free">—</div>
+                <div class="foot">Disponibles</div>
+            </div>
+
+            <div class="metric">
+                <div class="label">Espacios ocupados</div>
+                <div class="value" id="busy">—</div>
+                <div class="foot">En uso</div>
+            </div>
+
+            <div class="metric">
+                <div class="label">Niveles</div>
+                <div class="value" id="levels">3</div>
+                <div class="foot">Pisos monitoreados</div>
+            </div>
+
+        </section>
+
+        <!-- =========================
+             16. Estado de los espacios
+        ========================== -->
+
+        <section class="grid2">
+
+            <div class="panel">
+                <h2>Estado de los espacios</h2>
+
+                <div class="sub">
+                    Vista general por piso
+                </div>
+
+                <!-- Filtro dinámico por piso -->
+                <div class="floorfilter">
+                    <label for="floorFilter">
+                        Filtrar por piso
+                    </label>
+
+                    <select
+                        id="floorFilter"
+                        aria-label="Filtrar espacios por piso"
+                    >
+                        <option value="all">Todos los pisos</option>
+                    </select>
+
+                    <span class="filterhint">
+                        Elegí un piso para ver solo sus espacios.
+                    </span>
+                </div>
+
+                <!-- Los pisos se generan mediante JavaScript -->
+                <div id="floors"></div>
+
+                <!-- Leyenda de estados -->
+                <div class="legend">
+                    <span>
+                        <i style="background:#22c55e"></i>
+                        Libre
+                    </span>
+
+                    <span>
+                        <i style="background:#f43f5e"></i>
+                        Ocupado
+                    </span>
+                </div>
+            </div>
+
+            <p class="note" style="margin-top:14px">
+                La disponibilidad se consulta desde la base de datos compartida.
+                En esta versión académica, los sensores y dispositivos
+                físicos no están conectados realmente.
+            </p>
+
+        </section>
+    </main>
+
+    <!-- =========================
+         17. Pie de página
+    ========================== -->
+
+    <footer>
+        ParkSmart · Proyecto académico de diseño de un sistema
+        inteligente de estacionamiento
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        // ==========================================
+        // 18. Configuración y datos predeterminados
+        // ==========================================
+
+        const KEY = "parksmart_state_v2";
+
+        function defaults() {
+            const spots = [];
+
+            for (let floor = 1; floor <= 3; floor++) {
+                for (let number = 1; number <= 10; number++) {
+
+                    const occupied =
+                        (floor === 1 && [2, 4, 8].includes(number)) ||
+                        (floor === 2 && [1, 3, 6, 9].includes(number)) ||
+                        (floor === 3 && [5, 7, 10].includes(number));
+
+                    spots.push({
+                        id: `P${floor}-${String(number).padStart(2, "0")}`,
+                        floor: floor,
+                        state: occupied ? "busy" : "free"
+                    });
+                }
+            }
+
+            return {
+                spots,
+                components: [],
+                events: []
+            };
+        }
+
+        // ==========================================
+        // 19. Obtener los datos del navegador
+        // ==========================================
+
+        let remoteData = null;
+        let remoteErrorShown = false;
+
+        async function loadSharedData() {
+            if (!window.parkSupabase) {
+                remoteData = defaults();
+                draw();
+                return;
+            }
+            const { data, error } = await window.parkSupabase
+                .from("parksmart_state").select("state").eq("id", 1).maybeSingle();
+            if (error) {
+                console.error("No se pudo cargar ParkSmart:", error);
+                if (!remoteErrorShown) {
+                    remoteErrorShown = true;
+                    document.querySelector(".note").textContent =
+                      "No se pudo conectar con la base de datos. Revisá la configuración de Supabase.";
+                }
+                remoteData = defaults();
+            } else {
+                remoteData = data?.state || defaults();
+            }
+            draw();
+        }
+
+        // 20. Mostrar estadísticas y espacios
+        // ==========================================
+
+        function draw() {
+            const data = remoteData || defaults();
+            const spots = data.spots;
+
+            // Las reservas no se muestran en esta versión.
+            spots.forEach(spot => {
+                if (spot.state === "reserved") {
+                    spot.state = "free";
+                }
+            });
+
+            const free = spots.filter(
+                spot => spot.state === "free"
+            ).length;
+
+            const busy = spots.filter(
+                spot => spot.state === "busy"
+            ).length;
+
+            const floors = [
+                ...new Set(spots.map(spot => Number(spot.floor)))
+            ].sort((a, b) => a - b);
+
+            // Actualizar estadísticas generales.
+            const statistics = {
+                total: spots.length,
+                free: free,
+                busy: busy,
+                levels: floors.length,
+                freeHero: free
+            };
+
+            Object.entries(statistics).forEach(([id, value]) => {
+                document.getElementById(id).textContent = value;
+            });
+
+            // ======================================
+            // 21. Actualizar las opciones del filtro
+            // ======================================
+
+            const filter = document.getElementById("floorFilter");
+            const previous = filter.value;
+            const floorKey = floors.join(",");
+
+            if (filter.dataset.floors !== floorKey) {
+                filter.innerHTML =
+                    '<option value="all">Todos los pisos</option>' +
+                    floors.map(floor => `
+                        <option value="${floor}">
+                            Piso ${floor}
+                        </option>
+                    `).join("");
+
+                filter.dataset.floors = floorKey;
+
+                filter.value = floors.some(
+                    floor => String(floor) === previous
+                ) ? previous : "all";
+            }
+
+            // ======================================
+            // 22. Aplicar el filtro y dibujar los pisos
+            // ======================================
+
+            const selected = filter.value;
+
+            const visibleFloors = selected === "all"
+                ? floors
+                : floors.filter(
+                    floor => String(floor) === selected
+                );
+
+            document.getElementById("floors").innerHTML =
+                visibleFloors.map(floor => {
+
+                    const floorSpots = spots.filter(
+                        spot => Number(spot.floor) === floor
+                    );
+
+                    const occupied = floorSpots.filter(
+                        spot => spot.state === "busy"
+                    ).length;
+
+                    const available = floorSpots.length - occupied;
+
+                    const percentage = floorSpots.length
+                        ? Math.round(
+                            occupied / floorSpots.length * 100
+                        )
+                        : 0;
+
+                    return `
+                        <div class="floor">
+
+                            <div class="floorhead">
+                                <strong>Piso ${floor}</strong>
+                                <span>
+                                    ${available} libres de ${floorSpots.length}
+                                </span>
+                            </div>
+
+                            <div class="track">
+                                <div
+                                    class="bar"
+                                    style="width:${percentage}%"
+                                ></div>
+                            </div>
+
+                            <div
+                                class="spotgrid"
+                                style="margin-top:12px"
+                            >
+                                ${floorSpots.map(spot => {
+                                    const isBusy = spot.state === "busy";
+
+                                    return `
+                                        <div class="spot ${isBusy ? "busy" : ""}">
+                                            <div>${isBusy ? "🚘" : "✓"}</div>
+
+                                            <strong>${spot.id}</strong>
+
+                                            <small>
+                                                ${isBusy ? "Ocupado" : "Libre"}
+                                            </small>
+                                        </div>
+                                    `;
+                                }).join("")}
+                            </div>
+
+                        </div>
+                    `;
+                }).join("");
+        }
+
+        // ==========================================
+        // 23. Eventos e inicialización
+        // ==========================================
+
+        // Volver a dibujar cuando se seleccione otro piso.
+        document
+            .getElementById("floorFilter")
+            .addEventListener("change", draw);
+
+        // Actualizar cuando otra pestaña modifique los datos.
+        // Sincronizar datos compartidos entre dispositivos.
+        loadSharedData();
+        setInterval(loadSharedData, 2500);
+    </script>
+
+</body>
+</html>
